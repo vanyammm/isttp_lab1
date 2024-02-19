@@ -1,0 +1,12 @@
+    <div class="user-profile">
+        <h1>Профіль</h1>
+        <div class="user-info">
+            <h2>Ім'я користувача: {{ username }}</h2>
+            <p>Електронна пошта: {{ email }}</p>
+            {% if profile_picture %}
+                <img src="{{ profile_picture }}" alt="Profile Picture" height="100">
+            {% else %}
+                <p>Фото профілю відсутнє.</p>
+            {% endif %}
+        </div>
+    </div>>
