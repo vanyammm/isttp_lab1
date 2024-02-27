@@ -12,6 +12,7 @@ from .serializers import UserSerializer, TopicSerializer
 
 from .models import Topic, Category
 
+
 class CreateUserView(generics.CreateAPIView):
     model = get_user_model()
     serializer_class = UserSerializer
@@ -85,7 +86,8 @@ class TopicDetailView(RetrieveAPIView):
 
 
 class TopicPagination(PageNumberPagination):
-    page_size = 7
+    page_size = 4
+
 
 class TopicListView(ListAPIView):
     queryset = Topic.objects.all().order_by('-created_at')
@@ -94,9 +96,32 @@ class TopicListView(ListAPIView):
     template_name = 'topic_list.html'
     pagination_class = TopicPagination
 
+    def get_queryset(self):
+        queryset = Topic.objects.all().order_by('-created_at')
+        category_pk = self.kwargs.get('category_pk')
+        if category_pk is not None:
+            queryset = queryset.filter(category_id=category_pk)
+        return queryset
+
     def get(self, request, *args, **kwargs):
-        response = super(TopicListView, self).get(request, *args, **kwargs)
+        response = super().get(request, *args, **kwargs)
         return Response({
             'topics': response.data['results'],
             'page': response.data
         }, template_name=self.template_name)
+
+
+class LatestNewsView(ListAPIView):
+    serializer_class = TopicSerializer
+    renderer_classes = [TemplateHTMLRenderer]
+    template_name = 'latest_news.html'
+
+    def get_queryset(self):
+        return Topic.objects.filter(category__pk=1).order_by('-created_at')[:2]
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        data = {
+            'topics': response.data if isinstance(response.data, list) else [],
+        }
+        return Response(data, template_name=self.template_name)
