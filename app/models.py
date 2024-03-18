@@ -32,8 +32,12 @@ class Topic(models.Model):
 class Comment(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     content = models.TextField()
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     posted_at = models.DateTimeField(auto_now_add=True)
-    topic_id = models.ForeignKey(Category, null=False, on_delete=models.CASCADE)
+    topic_id = models.ForeignKey(Topic, null=False, on_delete=models.CASCADE)
+
+    def like_count(self):
+        return self.like_set.count()
 
 
 class Like(models.Model):

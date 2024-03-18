@@ -6,3 +6,5 @@ from .models import CustomUser, Category, Topic, Comment
 admin.site.register(CustomUser)
 admin.site.register(Category)
 admin.site.register(Topic)
+admin.site.register(Comment)
+

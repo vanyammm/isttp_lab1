@@ -1,0 +1,27 @@
+{% for comment in comments %}
+<div class="comment">
+    {% if comment.parent %}
+    <div class="comment-reply text-slate-300">
+        <div class="comment-info">
+            <span>Відповідь користувачу </span><strong>{{ comment.parent.user.username }}</strong>
+            <blockquote>"{{ comment.parent.content|truncatewords:10 }}
+                {% if comment.parent.content > 10 %}...{% endif %}"
+            </blockquote>
+        </div>
+    </div>
+    {% endif %}
+    <div class="text-slate-300 bg-zinc-900 border-gray-500 rounded border-[1px]">
+        <div class="container flex flex-row">
+            <div class="border-r-[1px] border-gray-500 p-2 w-1/5">
+                <span>Автор: </span><strong>{{ comment.user.username }}</strong>
+                <p><button class="like-button" data-comment-id="{{ comment.id }}">
+                    Лайки: {{ comment.like_count }}</button></p>
+                <p><button class="reply-button" data-comment-id="{{ comment.id }}">Відповісти</button></p>
+            </div>
+            <div class="flex items-center p-2 w-4/5">
+                <p>{{ comment.content }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

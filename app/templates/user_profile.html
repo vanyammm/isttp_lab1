@@ -1,12 +1,22 @@
-    <div class="user-profile">
-        <h1>Профіль</h1>
-        <div class="user-info">
-            <h2>Ім'я користувача: {{ username }}</h2>
+<div class="text-slate-500">
+    <h1>Профіль</h1>
+    <div class="user-info">
+        <h2>Ім'я користувача: {{ username }}</h2>
+        <p>Рейтинг: {{ rating }}</p>
+        {% if profile_picture %}
+            <img src="{{ profile_picture }}" alt="Profile Picture" height="100">
+        {% else %}
+            <p>Фото профілю відсутнє.</p>
+        {% endif %}
+        
+        {% if request.user.is_authenticated and request.user.username == username %}
             <p>Електронна пошта: {{ email }}</p>
-            {% if profile_picture %}
-                <img src="{{ profile_picture }}" alt="Profile Picture" height="100">
-            {% else %}
-                <p>Фото профілю відсутнє.</p>
-            {% endif %}
-        </div>
+        {% endif %}
+            <h3>Теми:</h3>
+            <ul>
+                {% for topic in topics %}
+                <li><a href="/topics/{{ topic.id }}">{{ topic.title }}</a>> - {{ topic.created_at }}</li>
+                {% endfor %}
+            </ul>
     </div>
+</div>
